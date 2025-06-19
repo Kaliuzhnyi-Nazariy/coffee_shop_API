@@ -3,8 +3,14 @@ import { IUser, PaymentArrays, PaymentMethod } from "./typesOrInterfaces/user";
 import helper from "../helper";
 
 export const PaymentSchema = new Schema<PaymentMethod>({
-  name: { type: String, required: true },
-  number: { type: String, required: true },
+  type: { type: String, enum: ["card", "paypal"], required: true },
+  cardHolderName: { type: String },
+  brand: { type: String },
+  // last4: { type: String },
+  expiryMonth: { type: String },
+  expiryYear: { type: String },
+  email: { type: String },
+  token: { type: String, required: true },
 });
 
 const userSchema = new Schema<IUser>({
@@ -12,7 +18,7 @@ const userSchema = new Schema<IUser>({
   phoneNumber: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   favorites: { type: [String], default: [] },
-  location: String,
+  location: { type: String, default: "" },
   paymentMethods: { type: [PaymentSchema] },
 });
 

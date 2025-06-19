@@ -9,10 +9,18 @@ export interface IUser {
   paymentMethods?: PaymentMethod[];
 }
 
-export interface PaymentMethod {
-  name: string;
-  number: string;
-}
+export type PaymentMethod = {
+  type: "card" | "paypal";
+  cardHolderName?: string;
+  brand?: string;
+  // last4?: string;
+  expiryMonth?: string;
+  expiryYear?: string;
+  email?: string;
+  cardNumber?: string;
+  cvc?: string;
+  token: string;
+};
 
 export type PaymentArrays = PaymentMethod[];
 
@@ -23,6 +31,16 @@ export interface UserResult {
   favorites: string[] | undefined;
   location: string | undefined;
   paymentMethods: PaymentMethod[] | undefined;
+  [key: string]: any;
+}
+
+export interface UserFinal {
+  _id: mongoose.Types.ObjectId;
+  name: string;
+  phoneNumber: string;
+  favorites?: string[];
+  location?: string;
+  paymentMethods?: PaymentMethod[] | undefined;
   [key: string]: any;
 }
 
