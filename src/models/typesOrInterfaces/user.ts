@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { Types } from "mongoose";
 
 export interface IUser {
   name: string;
@@ -19,7 +19,15 @@ export type PaymentMethod = {
   email?: string;
   cardNumber?: string;
   cvc?: string;
-  token: string;
+  token?: string;
+  _id?: string | Types.ObjectId;
+};
+
+export type PayPalPayment = {
+  type: "paypal";
+  email: string;
+  payerId?: string;
+  transactionId?: string;
 };
 
 export type PaymentArrays = PaymentMethod[];
