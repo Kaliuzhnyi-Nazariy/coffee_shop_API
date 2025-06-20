@@ -5,7 +5,7 @@ import { IOrder } from "./typesOrInterfaces/order";
 
 const orderSchema = new Schema({
   name: String,
-  amount: Number,
+  quantity: Number,
   ptice: Number,
 });
 
@@ -21,6 +21,6 @@ const orderNoteSchema = new Schema({
 
 (orderNoteSchema as any).post("save", helper.MongooseErrorHandler);
 
-const Order = model<IOrder>("order", orderSchema);
+const Order = model<IOrder>("order", orderNoteSchema);
 
 export default Order;
