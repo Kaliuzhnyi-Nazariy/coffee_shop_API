@@ -1,15 +1,16 @@
 import { PaymentMethod } from "./user";
 
+export interface OrderItem {
+  name: string;
+  quantity: number;
+  price: number;
+}
 export interface IOrder {
-  order: {
-    name: String;
-    amount: Number;
-    ptice: Number;
-  };
-  nameOfBuyer: String;
+  order: OrderItem[];
+  nameOfBuyer: string;
   paymentMethod: PaymentMethod;
-  sumPaid: Number;
-  locationToDeliver: String;
-  phone: String;
-  notes?: String;
+  sumPaid: number;
+  locationToDeliver: string;
+  phone: string;
+  notes?: string;
 }
