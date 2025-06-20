@@ -1,17 +1,7 @@
-//todo
-//get user
-//update user
-//delete account
-//add favorites
-//remove favorites
-//add payment method
-//remove payment method
-
 import { Request, Response } from "express-serve-static-core";
 import {
   CreateUser,
   ExtendedUser,
-  IUser,
   PaymentMethod,
   UserFinal,
   UserResult,
@@ -141,13 +131,82 @@ const removeFavorites = async (req: Request, res: Response<UserFinal>) => {
   return res.status(200).json(safeUser);
 };
 
-const addPaymentSystem = async (req: Request, res: Response) => {
+const addPaymentSystem = async (
+  req: Request<{}, {}, PaymentMethod>,
+  res: Response<{ userWithNewPayment: UserFinal; newPayment: PaymentMethod }>
+) => {
   const { type } = req.body;
+  const { _id } = (req as unknown as ExtendedUser).user;
 
-  const newPayment = {} as PaymentMethod;
+  let newPayment = {} as PaymentMethod;
 
   if (type === "card") {
+    const { cardHolderName, cardNumber, cvc, brand, expiryMonth, expiryYear } =
+      req.body;
+
+    if (
+      !cardHolderName ||
+      !cardNumber ||
+      !cvc ||
+      !brand ||
+      !expiryMonth ||
+      !expiryYear
+    )
+      return helper.errorHandler(400, "Full all fields!");
+
+    newPayment = req.body;
   } else {
+    const { email } = req.body;
+
+    if (!email) return helper.errorHandler(400, "Full all fields!");
+
+    newPayment = req.body;
+  }
+
+  const userWithNewPayment = await User.findByIdAndUpdate(
+    _id,
+    {
+      $push: { paymentMethods: newPayment },
+    },
+    { new: true }
+  );
+
+  if (!userWithNewPayment)
+    return helper.errorHandler(500, "Something went wrong");
+
+  return res.status(200).json({ newPayment, userWithNewPayment });
+};
+
+const removePayment = async (
+  req: Request,
+  res: Response<{ removedPayment: UserFinal; paymentId: string }>
+) => {
+  const { paymentId } = req.params;
+  const { _id } = (req as unknown as ExtendedUser).user;
+
+  const user = await User.findById(_id);
+
+  if (!user) return helper.errorHandler(400, "User not found!");
+
+  if (
+    user.paymentMethods?.some((method) => method._id?.toString() === paymentId)
+  ) {
+    const removedPayment = await User.findByIdAndUpdate(
+      _id,
+      {
+        $pull: {
+          paymentMethods: { _id: paymentId },
+        },
+      },
+      { new: true }
+    );
+
+    if (!removedPayment)
+      return helper.errorHandler(500, "Something went wrong!");
+
+    return res.status(200).json({ removedPayment, paymentId });
+  } else {
+    return helper.errorHandler(400, "Payment system is not found");
   }
 };
 
@@ -157,4 +216,6 @@ export default {
   deleteAccount: helper.ctrlWrapper(deleteAccount),
   addFavorites: helper.ctrlWrapper(addFavorites),
   removeFavorites: helper.ctrlWrapper(removeFavorites),
+  addPaymentSystem: helper.ctrlWrapper(addPaymentSystem),
+  removePayment: helper.ctrlWrapper(removePayment),
 };
