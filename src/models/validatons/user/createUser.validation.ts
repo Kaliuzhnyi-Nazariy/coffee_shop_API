@@ -1,8 +1,8 @@
 import { z } from "zod/v4";
 
-export const userValidation = z.object({
-  name: z.string().min(2, "Name should be longer than 1 symbol"),
-  email: z.email({ message: "Enter valid email value!" }),
+const createUserValidation = z.object({
+  name: z.string(),
+  phoneNumber: z.string(),
   password: z
     .string()
     .min(6, "Password must be more than 6 characters!")
@@ -12,7 +12,6 @@ export const userValidation = z.object({
         "Must contain 1 number, 1 special sign, 1 capital letter and be 6-16 characters",
     }),
   location: z.string().optional(),
-  paymentMethods: z.array(z.any()),
 });
 
-export default userValidation;
+export default createUserValidation;
