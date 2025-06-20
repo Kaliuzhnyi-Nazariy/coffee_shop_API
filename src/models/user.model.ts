@@ -10,7 +10,7 @@ export const PaymentSchema = new Schema<PaymentMethod>({
   expiryMonth: { type: String },
   expiryYear: { type: String },
   email: { type: String },
-  token: { type: String, required: true },
+  token: { type: String },
 });
 
 const userSchema = new Schema<IUser>({
