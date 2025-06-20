@@ -1,7 +1,9 @@
 import { z } from "zod/v4";
 
 const loginValidation = z.object({
-  phoneNumber: z.string("Phone number is obvious"),
+  phoneNumber: z
+    .string("Phone number is obvious")
+    .regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number format"),
   password: z
     .string("Password is obvious")
     .min(6, "Password must be more than 6 characters!")
