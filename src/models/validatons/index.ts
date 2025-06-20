@@ -1,3 +1,5 @@
-import { userValidation } from "./user.validation";
+import createUserValidation from "./user";
+import paymentValidation from "./paymentValidation";
+import orderValidation from "./order.validation";
 
-export default { userValidation };
+export default { createUserValidation, paymentValidation, orderValidation };
