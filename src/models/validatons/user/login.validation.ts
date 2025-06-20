@@ -1,11 +1,11 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 const loginValidation = z.object({
   phoneNumber: z
-    .string("Phone number is obvious")
+    .string()
     .regex(/^\+?[1-9]\d{7,14}$/, "Invalid phone number format"),
   password: z
-    .string("Password is obvious")
+    .string()
     .min(6, "Password must be more than 6 characters!")
     .max(16, "Password max length is 16 characters!")
     .regex(/^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,16}$/, {

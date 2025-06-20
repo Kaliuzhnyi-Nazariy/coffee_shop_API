@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 const cardPaymentSchema = z.object({
   type: z.literal("card"),
@@ -14,7 +14,7 @@ const cardPaymentSchema = z.object({
 
 const paypalPaymentSchema = z.object({
   type: z.literal("paypal"),
-  email: z.email(),
+  email: z.string().email(),
 });
 
 const orderValidation = z.object({

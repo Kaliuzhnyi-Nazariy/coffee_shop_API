@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export const userValidation = z.object({
   name: z.string().min(2, "Name should be longer than 1 symbol").optional(),

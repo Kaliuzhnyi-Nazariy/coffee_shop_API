@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from "express-serve-static-core";
-import { Schema } from "zod/v4";
+import { ZodTypeAny } from "zod";
 import helper from "../helper";
 
-const validator = (validatorSchema: Schema) => {
+const validator = (validatorSchema: ZodTypeAny) => {
   const fn = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await validatorSchema.parse(req.body);
+      await validatorSchema.parseAsync(req.body);
       next();
     } catch (error) {
       if (error instanceof Error) {
