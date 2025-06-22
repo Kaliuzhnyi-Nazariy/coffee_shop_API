@@ -1,5 +1,10 @@
 import { Schema, model, Types } from "mongoose";
-import { IUser, PaymentArrays, PaymentMethod } from "./typesOrInterfaces/user";
+import {
+  CartItem,
+  IUser,
+  PaymentArrays,
+  PaymentMethod,
+} from "./typesOrInterfaces/user";
 import helper from "../helper";
 
 export const PaymentSchema = new Schema<PaymentMethod>({
@@ -13,6 +18,11 @@ export const PaymentSchema = new Schema<PaymentMethod>({
   token: { type: String },
 });
 
+const CartItemSchema = new Schema<CartItem>({
+  id: { type: String, required: true },
+  amount: { type: Number, required: true },
+});
+
 const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   phoneNumber: { type: String, unique: true, required: true },
@@ -20,6 +30,7 @@ const userSchema = new Schema<IUser>({
   favorites: { type: [String], default: [] },
   location: { type: String, default: "" },
   paymentMethods: { type: [PaymentSchema] },
+  cart: { type: [CartItemSchema], default: [] },
 });
 
 (userSchema as any).post("save", helper.MongooseErrorHandler);

@@ -7,6 +7,7 @@ export interface IUser {
   favorites?: string[];
   location?: string;
   paymentMethods?: PaymentMethod[];
+  cart?: CartItem[];
 }
 
 export type PaymentMethod = {
@@ -64,3 +65,8 @@ export interface CreateUser {
 }
 
 export type LogUser = Omit<CreateUser, "location" | "name">;
+
+export interface CartItem {
+  id: string;
+  amount: number;
+}

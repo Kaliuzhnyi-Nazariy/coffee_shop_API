@@ -51,6 +51,7 @@ const signUp = async (
       favorites: [],
       location: createdUser.location,
       paymentMethods: [],
+      cart: [],
     });
 };
 
