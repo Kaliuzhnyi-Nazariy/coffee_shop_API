@@ -1,10 +1,12 @@
 import mongoose, { Types } from "mongoose";
+import { IProduct } from "./product";
 
 export interface IUser {
   name: string;
   phoneNumber: string;
   password: string;
-  favorites?: string[];
+  favorites?: IProduct[];
+  wishlist?: IProduct[];
   location?: string;
   paymentMethods?: PaymentMethod[];
   cart?: CartItem[];
@@ -37,7 +39,8 @@ export interface UserResult {
   _id: mongoose.Types.ObjectId;
   name: string;
   phoneNumber: string;
-  favorites: string[] | undefined;
+  favorites: IProduct[] | undefined;
+  wishlist: IProduct[];
   location: string | undefined;
   paymentMethods: PaymentMethod[] | undefined;
   [key: string]: any;
@@ -47,7 +50,7 @@ export interface UserFinal {
   _id: mongoose.Types.ObjectId;
   name: string;
   phoneNumber: string;
-  favorites?: string[];
+  favorites?: IProduct[];
   location?: string;
   paymentMethods?: PaymentMethod[] | undefined;
   [key: string]: any;
