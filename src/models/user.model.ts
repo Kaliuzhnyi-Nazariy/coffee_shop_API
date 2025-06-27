@@ -6,6 +6,7 @@ import {
   PaymentMethod,
 } from "./typesOrInterfaces/user";
 import helper from "../helper";
+import { IProduct, IProductCart } from "./typesOrInterfaces/product";
 
 export const PaymentSchema = new Schema<PaymentMethod>({
   type: { type: String, enum: ["card", "paypal"], required: true },
@@ -18,9 +19,25 @@ export const PaymentSchema = new Schema<PaymentMethod>({
   token: { type: String },
 });
 
-const CartItemSchema = new Schema<CartItem>({
+const CartItemSchema = new Schema<IProductCart>({
   id: { type: String, required: true },
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String, required: true },
+  category: { hot: Boolean, cold: Boolean },
+  image: { type: String, required: true },
+  rating: { rate: Number },
   amount: { type: Number, required: true },
+});
+
+const wishlistSchema = new Schema<IProduct>({
+  id: { type: String, required: true },
+  title: { type: String, required: true },
+  price: { type: Number, required: true },
+  description: { type: String, required: true },
+  category: { hot: Boolean, cold: Boolean },
+  image: { type: String, required: true },
+  rating: { rate: Number },
 });
 
 const userSchema = new Schema<IUser>({
@@ -29,8 +46,9 @@ const userSchema = new Schema<IUser>({
   password: { type: String, required: true },
   favorites: { type: [String], default: [] },
   location: { type: String, default: "" },
-  paymentMethods: { type: [PaymentSchema] },
+  paymentMethods: { type: [PaymentSchema], default: [] },
   cart: { type: [CartItemSchema], default: [] },
+  wishlist: { type: [wishlistSchema], default: [] },
 });
 
 (userSchema as any).post("save", helper.MongooseErrorHandler);
