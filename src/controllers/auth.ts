@@ -50,6 +50,7 @@ const signUp = async (
       phoneNumber: createdUser.phoneNumber,
       favorites: [],
       location: createdUser.location,
+      wishlist: [],
       paymentMethods: [],
       cart: [],
     });
@@ -90,6 +91,7 @@ const login = async (
       phoneNumber: user.phoneNumber,
       favorites: user.favorites,
       location: user.location,
+      wishlist: user.wishlist || [],
       paymentMethods: user.paymentMethods,
     });
 };
