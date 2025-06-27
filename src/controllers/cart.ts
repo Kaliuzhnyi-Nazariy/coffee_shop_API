@@ -6,24 +6,21 @@ import {
 } from "../models/typesOrInterfaces/user";
 import User from "../models/user.model";
 import helper from "../helper";
+import { IProduct, IProductCart } from "../models/typesOrInterfaces/product";
 
 const addToCart = async (
-  req: Request<{}, {}, CartItem>,
-  res: Response<{ user: IUser; newCartItem: CartItem }>
+  req: Request<{}, {}, IProductCart>,
+  res: Response<{ user: IUser; newCartItem: IProduct }>
 ) => {
-  const { id, amount } = req.body;
+  const { id, amount, title, price, description, category, image, rating } =
+    req.body;
   const { id: userId } = (req as unknown as ExtendedUser).user;
 
   const isUser = await User.findById(userId);
 
   if (!isUser) return helper.errorHandler(400, "User not found");
 
-  const newCartItem: CartItem = {
-    id,
-    amount,
-  };
-
-  const isGoodInCart = isUser?.cart?.some((item) => item.id === id);
+  const isGoodInCart = isUser?.cart?.find((item) => item.id == id);
 
   let user;
 
@@ -39,13 +36,24 @@ const addToCart = async (
     user = await User.findByIdAndUpdate(
       userId,
       {
-        $push: { cart: newCartItem },
+        $push: { cart: req.body },
       },
       { new: true }
     );
   }
 
   if (!user) return helper.errorHandler(400);
+
+  const newCartItem = {
+    id,
+    amount,
+    title,
+    price,
+    description,
+    category,
+    image,
+    rating,
+  } as IProduct;
 
   return res.status(200).json({ user, newCartItem });
 };

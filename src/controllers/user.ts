@@ -9,6 +9,7 @@ import {
 import helper from "../helper";
 import User from "../models/user.model";
 import * as argon from "argon2";
+import { IProduct } from "../models/typesOrInterfaces/product";
 
 const getUser = async (req: Request, res: Response<UserResult>) => {
   const userData = (req as unknown as ExtendedUser).user;
@@ -69,24 +70,29 @@ const deleteAccount = async (req: Request, res: Response) => {
     .json(isUser);
 };
 
-const addFavorites = async (req: Request, res: Response<UserFinal>) => {
+const addFavorites = async (
+  req: Request<{}, {}, IProduct>,
+  res: Response<UserFinal>
+) => {
   const { _id } = (req as unknown as ExtendedUser).user;
-  const { goodId } = req.params;
+  const { goodId } = req.params as { goodId: string };
 
   const user = await User.findById(_id).select("-password");
 
   if (!user) return helper.errorHandler(400, "User not found!");
 
   const checkIfGoodInFavorites = () => {
-    return user.favorites?.includes(goodId) ?? false;
+    return user.favorites?.some((fav) => fav.id === goodId) ?? false;
   };
 
   if (checkIfGoodInFavorites())
     return helper.errorHandler(400, "Good already in favorites!");
 
+  const newFav = req.body;
+
   const userWithNewFavorite = await User.findByIdAndUpdate(
     _id,
-    { $push: { favorites: goodId } },
+    { $push: { favorites: newFav } },
     { new: true }
   ).select("-password");
 
@@ -109,7 +115,7 @@ const removeFavorites = async (req: Request, res: Response<UserFinal>) => {
   if (!user) return helper.errorHandler(400, "User not found!");
 
   const checkIfGoodInFavorites = () => {
-    return user.favorites?.includes(goodId);
+    return user.favorites?.some((fav) => fav.id === goodId);
   };
 
   if (!checkIfGoodInFavorites())
@@ -117,7 +123,7 @@ const removeFavorites = async (req: Request, res: Response<UserFinal>) => {
 
   const userWithNewFavorite = await User.findByIdAndUpdate(
     _id,
-    { $pull: { favorites: goodId } },
+    { $pull: { favorites: { id: goodId } } },
     { new: true }
   ).select("-password");
 
