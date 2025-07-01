@@ -10,7 +10,8 @@ const errorHandler = (
   status: number = 500,
   message: string = errors[status]
 ) => {
-  const error = new Error(message);
+  const error = new Error();
+  (error as Error).message = message;
   (error as any).status = status;
 
   throw error;

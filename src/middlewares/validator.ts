@@ -7,9 +7,12 @@ const validator = (validatorSchema: ZodTypeAny) => {
     try {
       await validatorSchema.parseAsync(req.body);
       next();
-    } catch (error) {
-      if (error instanceof Error) {
-        throw helper.errorHandler(400, error?.message);
+    } catch (error: any) {
+      if (error) {
+        throw helper.errorHandler(
+          400,
+          error.errors.map((err: { message: string }) => err.message)
+        );
       } else {
         next(error);
       }
