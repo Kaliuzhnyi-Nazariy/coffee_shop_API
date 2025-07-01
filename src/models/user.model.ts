@@ -30,7 +30,7 @@ const CartItemSchema = new Schema<IProductCart>({
   amount: { type: Number, required: true },
 });
 
-const wishlistSchema = new Schema<IProduct>({
+const FavoriteSchema = new Schema<IProduct>({
   id: { type: String, required: true },
   title: { type: String, required: true },
   price: { type: Number, required: true },
@@ -44,11 +44,10 @@ const userSchema = new Schema<IUser>({
   name: { type: String, required: true },
   phoneNumber: { type: String, unique: true, required: true },
   password: { type: String, required: true },
-  favorites: { type: [String], default: [] },
+  favorites: { type: [FavoriteSchema], default: [] },
   location: { type: String, default: "" },
   paymentMethods: { type: [PaymentSchema], default: [] },
   cart: { type: [CartItemSchema], default: [] },
-  wishlist: { type: [wishlistSchema], default: [] },
 });
 
 (userSchema as any).post("save", helper.MongooseErrorHandler);

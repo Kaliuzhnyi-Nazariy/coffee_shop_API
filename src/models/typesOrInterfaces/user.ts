@@ -6,7 +6,6 @@ export interface IUser {
   phoneNumber: string;
   password: string;
   favorites?: IProduct[];
-  wishlist?: IProduct[];
   location?: string;
   paymentMethods?: PaymentMethod[];
   cart?: CartItem[];
@@ -40,7 +39,6 @@ export interface UserResult {
   name: string;
   phoneNumber: string;
   favorites: IProduct[] | undefined;
-  wishlist: IProduct[];
   location: string | undefined;
   paymentMethods: PaymentMethod[] | undefined;
   [key: string]: any;
