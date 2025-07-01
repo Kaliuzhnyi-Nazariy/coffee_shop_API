@@ -17,8 +17,14 @@ const signUp = async (
   req: Request<{}, {}, CreateUser>,
   res: Response<UserResult>
 ) => {
+  const { name, password, phoneNumber, location } = req.body;
+
+  if (!name || !password || !phoneNumber || !location)
+    return helper.errorHandler(400, "Wrong credentials!");
+
   const isUser = await User.findOne({ phoneNumber: req.body.phoneNumber });
-  if (isUser) return helper.errorHandler(409);
+  if (isUser)
+    return helper.errorHandler(409, "This credentials already in use!");
 
   const hashedPassword = await argon.hash(req.body.password);
 
@@ -50,7 +56,6 @@ const signUp = async (
       phoneNumber: createdUser.phoneNumber,
       favorites: [],
       location: createdUser.location,
-      wishlist: [],
       paymentMethods: [],
       cart: [],
     });
@@ -91,7 +96,6 @@ const login = async (
       phoneNumber: user.phoneNumber,
       favorites: user.favorites,
       location: user.location,
-      wishlist: user.wishlist || [],
       paymentMethods: user.paymentMethods,
     });
 };
