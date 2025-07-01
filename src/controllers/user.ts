@@ -72,7 +72,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 
 const addFavorites = async (
   req: Request<{}, {}, IProduct>,
-  res: Response<UserFinal>
+  res: Response<{ favorites: IProduct[] | undefined }>
 ) => {
   const { _id } = (req as unknown as ExtendedUser).user;
   const { goodId } = req.params as { goodId: string };
@@ -103,10 +103,13 @@ const addFavorites = async (
     favorites: userWithNewFavorite.favorites ?? [],
   };
 
-  return res.status(200).json(safeUser);
+  return res.status(200).json({ favorites: safeUser.favorites });
 };
 
-const removeFavorites = async (req: Request, res: Response<UserFinal>) => {
+const removeFavorites = async (
+  req: Request,
+  res: Response<{ favorites: IProduct[] | undefined }>
+) => {
   const { _id } = (req as unknown as ExtendedUser).user;
   const { goodId } = req.params;
 
@@ -134,12 +137,13 @@ const removeFavorites = async (req: Request, res: Response<UserFinal>) => {
     favorites: userWithNewFavorite.favorites ?? [],
   };
 
-  return res.status(200).json(safeUser);
+  return res.status(200).json({ favorites: safeUser.favorites });
 };
 
 const addPaymentSystem = async (
   req: Request<{}, {}, PaymentMethod>,
-  res: Response<{ userWithNewPayment: UserFinal; newPayment: PaymentMethod }>
+  res: Response<{ newPayment: PaymentMethod[] | undefined }>
+  // res: Response<{ userWithNewPayment: UserFinal; newPayment: PaymentMethod }>
 ) => {
   const { type } = req.body;
   const { _id } = (req as unknown as ExtendedUser).user;
@@ -180,12 +184,14 @@ const addPaymentSystem = async (
   if (!userWithNewPayment)
     return helper.errorHandler(500, "Something went wrong");
 
-  return res.status(200).json({ newPayment, userWithNewPayment });
+  return res
+    .status(200)
+    .json({ newPayment: userWithNewPayment.paymentMethods });
 };
 
 const removePayment = async (
   req: Request,
-  res: Response<{ removedPayment: UserFinal; paymentId: string }>
+  res: Response<{ paymentId: string }>
 ) => {
   const { paymentId } = req.params;
   const { _id } = (req as unknown as ExtendedUser).user;
@@ -210,7 +216,7 @@ const removePayment = async (
     if (!removedPayment)
       return helper.errorHandler(500, "Something went wrong!");
 
-    return res.status(200).json({ removedPayment, paymentId });
+    return res.status(200).json({ paymentId });
   } else {
     return helper.errorHandler(400, "Payment system is not found");
   }

@@ -58,7 +58,10 @@ const addToCart = async (
   return res.status(200).json({ user, newCartItem });
 };
 
-const removeFromCart = async (req: Request, res: Response<IUser>) => {
+const removeFromCart = async (
+  req: Request,
+  res: Response<{ user: IUser; goodId: string }>
+) => {
   const { goodId } = req.params;
   const { id } = (req as unknown as ExtendedUser).user;
 
@@ -77,7 +80,7 @@ const removeFromCart = async (req: Request, res: Response<IUser>) => {
 
   if (!updatedUser) return helper.errorHandler(400, "Something went wrong!");
 
-  return res.status(200).json(updatedUser);
+  return res.status(200).json({ user: updatedUser, goodId });
 };
 
 export default {
