@@ -38,7 +38,7 @@ export interface UserResult {
   _id: mongoose.Types.ObjectId;
   name: string;
   phoneNumber: string;
-  favorites: IProduct[] | undefined;
+  favorites: IProduct[];
   location: string | undefined;
   paymentMethods: PaymentMethod[] | undefined;
   [key: string]: any;

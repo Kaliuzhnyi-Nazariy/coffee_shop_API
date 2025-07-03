@@ -94,7 +94,7 @@ const login = async (
       _id: user._id,
       name: user.name,
       phoneNumber: user.phoneNumber,
-      favorites: user.favorites,
+      favorites: user.favorites || [],
       location: user.location,
       paymentMethods: user.paymentMethods,
     });

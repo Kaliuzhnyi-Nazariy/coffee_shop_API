@@ -72,7 +72,7 @@ const deleteAccount = async (req: Request, res: Response) => {
 
 const addFavorites = async (
   req: Request<{}, {}, IProduct>,
-  res: Response<{ favorites: IProduct[] | undefined }>
+  res: Response<IProduct>
 ) => {
   const { _id } = (req as unknown as ExtendedUser).user;
   const { goodId } = req.params as { goodId: string };
@@ -98,18 +98,15 @@ const addFavorites = async (
 
   if (!userWithNewFavorite) return helper.errorHandler(500);
 
-  const safeUser: UserFinal = {
-    ...userWithNewFavorite.toObject(),
-    favorites: userWithNewFavorite.favorites ?? [],
-  };
+  // const safeUser: UserFinal = {
+  //   ...userWithNewFavorite.toObject(),
+  //   favorites: userWithNewFavorite.favorites ?? [],
+  // };
 
-  return res.status(200).json({ favorites: safeUser.favorites });
+  return res.status(200).json(newFav);
 };
 
-const removeFavorites = async (
-  req: Request,
-  res: Response<{ favorites: IProduct[] | undefined }>
-) => {
+const removeFavorites = async (req: Request, res: Response<IProduct>) => {
   const { _id } = (req as unknown as ExtendedUser).user;
   const { goodId } = req.params;
 
@@ -119,6 +116,10 @@ const removeFavorites = async (
 
   const checkIfGoodInFavorites = () => {
     return user.favorites?.some((fav) => fav.id === goodId);
+  };
+
+  const good = () => {
+    return user.favorites?.filter((fav) => fav.id == goodId)[0];
   };
 
   if (!checkIfGoodInFavorites())
@@ -132,12 +133,12 @@ const removeFavorites = async (
 
   if (!userWithNewFavorite) return helper.errorHandler(500);
 
-  const safeUser: UserFinal = {
-    ...userWithNewFavorite.toObject(),
-    favorites: userWithNewFavorite.favorites ?? [],
-  };
+  // const safeUser: UserFinal = {
+  //   ...userWithNewFavorite.toObject(),
+  //   favorites: userWithNewFavorite.favorites ?? [],
+  // };
 
-  return res.status(200).json({ favorites: safeUser.favorites });
+  return res.status(200).json(good());
 };
 
 const addPaymentSystem = async (
