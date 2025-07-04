@@ -84,10 +84,9 @@ const login = async (
   return res
     .status(200)
     .cookie("token", token, {
-      sameSite: "none",
       httpOnly: true,
-      // sameSite: "lax",
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: "/",
     })
     .json({
